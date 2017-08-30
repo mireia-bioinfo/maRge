@@ -24,7 +24,7 @@ We have implemented several functions for running HOMER programs from (they are 
 - `countSignHOMER`. This function is usefull when you want to use **de novo** motifs for your analysis. It returns the number of significant **de novo** motifs that were found in your data, so you can extract the rows from the dataframe in downstream analysis.
 - `catSignMotifsHOMER`. Creates a single `.motif` file containing all the sequences that were found significant in the analysis.
 
-## Query a single region for TF Motifs
+### Query a single region for TF Motifs
 
 
-## Generation of Transcription Factor Regulatory Networks
+### Generation of Transcription Factor Regulatory Networks
