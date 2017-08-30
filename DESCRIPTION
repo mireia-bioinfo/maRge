@@ -2,7 +2,7 @@ Package: maRge
 Title: Motif Analysis in R for Genomic Exploration
 Version: 0.0.0.9000
 Authors@R: person("Mireia", "Ramos-Rodriguez", email = "mramos@igtp.cat", role = c("aut", "cre"))
-Description:maRge is a package developed for simplifying motif analysis of genomic regions. On one side, it provides a wrap to HOMER de novo motif analysis. On the other side, it provides easy tools to query a region for transcription factor binding motifs.
+Description: maRge is a package developed for simplifying motif analysis of genomic regions. On one side, it provides a wrap to HOMER de novo motif analysis. On the other side, it provides easy tools to query a region for transcription factor binding motifs.
 Depends: R (>= 3.3.1)
 License: What license is it under?
 Encoding: UTF-8
@@ -17,3 +17,7 @@ Imports:
 	rentrez,
 	TFBSTools,
 	XML
+Suggests: knitr,
+    rmarkdown,
+    BiocStyle
+VignetteBuilder: knitr

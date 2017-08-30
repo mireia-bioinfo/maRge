@@ -1,0 +1,33 @@
+---
+title: "Search for candidate transcription factors binding in a genomic region"
+author: "Mireia Ramos-Rodriguez"
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{De Novo Motif Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
+                      echo=TRUE, warning=FALSE, message=FALSE,
+                      cache=TRUE)
+```
+
+Some times in your analysis you end up with few regions of interest that contain SNPs associated with risk of a certain disease. At this point, you might be intereseted in seeing if the binding of any transcription factor to these genomic regions (distal regulatory elements, promoters, etc.) is being disrupted by the presence of the SNP.
+
+Here we present few functions to do an exploratory analysis in the selected regions and collect the transcription factor candidates that might be binding to such regions.
+
+# Obtaining TF candidates binding to your region of interest
+Before doing any analysis, we need to retrieve the transcription factor binding motifs from a database such as [Jaspar](http://jaspar.genereg.net/). 
+
+In this package, we implemented a function called `getMotifMatrixJASPAR()` to retrieve a list of binding motifs for all trancription factors in Jaspar 2016 database.  
+
+```{r Obtain TF matrix}
+library("maRge")
+matrixList <- getMotifMatrixJASPAR(species=9606, matrixtype="PWM")
+```
+

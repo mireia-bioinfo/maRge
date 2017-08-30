@@ -11,10 +11,6 @@
 #' @param end Character string containing chromosome name, if not provided using a data.frame or GRanges object.
 #' @return Data.frame containing all the TF of interest that can be found in the region.
 #' @export
-#' @examples 
-#' \notrun{
-#' 
-#' }
 getCandidateTFs <- function(dat, PFMatrixList, type="region", seqname, 
                             minscore="80%", strand="*", start=NA, chr=NA) {
   ## Check that input has correct format.
@@ -46,11 +42,6 @@ getCandidateTFs <- function(dat, PFMatrixList, type="region", seqname,
            call. = TRUE, domain = NULL)
     }
   }
-  # else {
-  #   stop("Invalid type specification. Should be 'region' or 'seq'.", 
-  #        call. = TRUE, domain = NULL)
-  # }
-  
   sitesetList <- TFBSTools::searchSeq(PFMatrixList, seq, seqname=seqname,
                            min.score="80%", strand="*")
   list <- data.frame(sitesetList)[,-c(2,3)]

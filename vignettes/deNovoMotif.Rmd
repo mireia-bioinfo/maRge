@@ -1,0 +1,93 @@
+---
+title: "De Novo Motif Analysis with maRge"
+author: "Mireia Ramos-Rodriguez"
+date: "`r Sys.Date()`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{De Novo Motif Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+A __*de novo* motif analysis__ consists on looking at enriched k-mers (or motifs) in your sequences of interest, and then matching the results to motifs that are known to be bound by certain transcription factors (TF). With this analysis, you will be able to infer which TFs are binding more than expected your regions of interest.
+
+The motif analysis in this package is performed using your local HOMER^[[HOMER findMotifsGenome.pl](http://homer.ucsd.edu/homer/ngs/peakMotifs.html) documentation.] installation. As a default, it looks for the HOMER alias in your computer and returns and error if it can not find it. You can provide the HOMER location using the argument `path_homer`.
+
+# Performing *de novo* motif analysis
+We have created a wrapper function called `deNovoMotifHOMER()`, which sends the appropriate command to the system in order to run *de novo* HOMER motif analysis in your machine. You just need to provide your regions of interest using the name of the bed file where they are saved. The default `genome` is set to hg19 and `cores` is set to 6. You can change that using the function arguments.
+
+This function does not return any object. It creates a folder with the name you assigned to `path_output` that contains the HTML and other files that are created by HOMER when the *de novo* motif analysis is ran.
+
+```{r de Novo Motif HOMER, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+out_homer <- "../data/raw/HOMER_results/"
+deNovoMotifHOMER(bed="../data/raw/sample_regions.bed", path_output=out_homer,
+                 path_homer="~/tools/homer/")
+```
+
+Since HOMER returns __results that might be false positives__ (they are marked with `*` in the HTML file), we will need to remove those for further analysis. The function `countSignHOMER()` returns the number of significant results that were found by HOMER.
+
+```{r Count Significant results (HOMER de novo), eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+sign <- countSignHOMER(results_homer=out_homer)
+sign
+```
+
+Once we have the significant results, we can just plot the TF found, and their % in target sequences and p-values. First, we need to load the HTML file with the *de novo* motif results using `XML::readHTMLTable()`.
+```{r Load HOMER results, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+## We load HOMER output HTML using XML package.
+homer <- XML::readHTMLTable(paste0(.dat, "homer_output/homerResults.html"))[[1]]
+knitr::kable(head(homer))
+```
+
+As you can see in the table, the names for the motifs are difficult to read. To edit the HOMER output names for the TFs, we can also use the function `getSignNamesHOMER()`.
+
+```{r Obtain clean names, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+## Remove the non-significant results
+homer <- homer[1:sign,]
+homer$`Best Match/Details` <- getSignNamesHOMER(homer, num_sign=sign)
+knitr::kable(head(homer))
+```
+
+
+```{r Creating Motifs Plot, fig.width=8, fig.height=5, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+library(ggplot2)
+homer$`% of Targets` <- as.numeric(gsub("%", "", homer$`% of Targets`))
+homer$`% of Background` <- as.numeric(gsub("%", "", homer$`% of Background`))
+homer$log10Pvalue <- - log10(as.numeric(as.character(homer$`P-value`))+1)
+homer$`Best Match/Details` <- factor(homer$`Best Match/Details`, levels=c(as.character(homer$`Best Match/Details`)))
+homer$`% Diff` <- homer$`% of Targets` - homer$`% of Background`
+
+ggplot(homer, aes(`Best Match/Details`, `% of Targets`)) +
+  geom_point(aes(size=homer$`% Diff`, colour=homer$log10Pvalue)) +
+  scale_color_gradient(low="light green", high="dark green") +
+  theme_bw() +
+  theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1)) +
+  labs(x="TF Best Match", size="% Target - % Back", colour="-log10(p-value+1)",
+       title="Summary significant De Novo HOMER Motifs")
+```
+
+If we want to further understand the biological functions of these motifs, we can use `getAnnoTF()` to convert the names of the motif matches to gene symbols, ensembl and entrez ids, and to retrieve the gene description and summary annotation from entrez. We will just need to use as input the names obtained by `getSignNamesHOMER()` and use them as input for this function. The otuput will be a `data.frame` with the annotation.
+
+```{r Annotate TF, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+anno <- getAnnoTF(as.character(homer$`Best Match/Details`))
+colnames(anno) <- c("Symbol", "TF.names", "TF.symbol", "entrez_id", "ensembl_id", "description", "summary")
+
+knitr::kable(head(anno)[1:2,], format = "html") #, table.attr = "style='width:30%;'"
+```
+
+# Retrieving coordinates for the motifs found
+Since HOMER does not provide natively the locations for the motifs, we need to run `homer annotatePeaks.pl`, which has been wrapped in the function `annotateMotifsRegions()`. 
+
+Although the motifs can be retrieved with two other scripts (`findMotifsGenome.pl` and `scanMotifGenomeWide.pl`) it requieres much less post-processing to use `annotatePeaks.pl` specifying the options `-m` for adding a motif file and `-mbed` to output a bed file with the location in your genomic regions of interest of the specified motifs.
+
+However, before we need to cat together all the motifs of interest that we wan to scan in our regions of interest. This can be done using `catSignMotifsHOMER()` which will join in a single motif file all the significant motif matrices found. The function itself returns the location for the motif file, which can be used as input for `annotateMotifsRegions()`. This function will create two files with the name `out_name`: `out_name.bed` which will contain the positions for the different motifs and `out_name.tsv`, from which you can extract the regions ID and the motifs it contains.
+
+```{r Reverse search for motifs, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+motif <- catSignMotifsHOMER(path_output=paste0(.dat, "homer_output/"), num_sign=sign)
+annotateMotifsRegions(bed=paste0(.dat, "sample_regions.bed"), motif_file=motif, 
+                        out_name="test/motifs_loc", path_homer="~/tools/homer/")
+```
+
+```{bash, eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
+head test/motifs_loc.bed
+```

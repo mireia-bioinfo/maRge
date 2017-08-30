@@ -3,7 +3,7 @@
 #' By using the PWM and the genomic locations of the motif found, it adds blanks to the PWM to make them be centered in the SNP of interest.
 #' @param list Data.frame outputed from getCandidateTFs().
 #' @param PFMatrixList Output of getMotifMatrixJASPAR() using matrix="PFM", with all the TF you want to query.
-#' @importClassesFrom motifStack pcm pf
+#' @importClassesFrom motifStack pcm pfm
 #' @export
 alignTF_SNP <- function(list, PFMatrixList) {
   id <- list$ID

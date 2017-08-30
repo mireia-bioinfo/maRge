@@ -42,7 +42,7 @@ getAnnoTF <- function(namesTF) {
   df.anno$description <- NA
   df.anno$summary <- NA
   
-  for (i in df.anno$entrezgene) {
+  for (i in df.anno$entrezgene[!is.na(df.anno$entrezgene)]) {
     r_search <- rentrez::entrez_search(db="gene", term=paste0("(", i, 
                                                               "[UID]) AND (Homo sapiens[ORGN])"))
     gene <- rentrez::entrez_fetch(db="gene", id=r_search$ids, rettype="xml", parsed=TRUE)

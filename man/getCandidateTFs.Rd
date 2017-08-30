@@ -30,8 +30,3 @@ Data.frame containing all the TF of interest that can be found in the region.
 \description{
 Using an input DNA sequence or genomic coordinates, it returns a list of candidate TF that match motif sequences found in your region.
 }
-\examples{
-\\notrun{
-
-}
-}

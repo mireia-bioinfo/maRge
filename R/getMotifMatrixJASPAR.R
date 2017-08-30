@@ -5,6 +5,7 @@
 #' @param matrixtype Character containing the type of motif matrix you want to retrieve from JASPAR database. One of "PWM" (default), "ICM", "PFM". 
 #' @return Object of type "PFMatrixList" that can be used as input for getCandidateTFs.
 #' @export
+#' @importFrom RSQLite dbGetQuery dbConnect dbDisconnect
 #' @examples
 #' \notrun{
 #' getMotifMatrixJASPAR(species=9606, matrixtype="PWM")
