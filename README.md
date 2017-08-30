@@ -14,4 +14,5 @@ it provides easy tools to query a region for transcription factor binding motifs
 ```
 ## install.packages("devtools")
 devtools::install_github("mirthelle/maRge")
+library(maRge)
 ```
