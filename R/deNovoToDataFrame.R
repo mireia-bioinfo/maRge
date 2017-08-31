@@ -49,5 +49,7 @@ deNovoToDataFrame <- function(results_homer, include_all=TRUE) {
                                              res.all$`Best Match/Details`, perl=T)),
                                     function (x) x[[length(x)]])))
   res.all <- res.all[,c(2,14,4:7,1,11:13)]
+  res.all$Rank <- factor(res.all$Rank, levels=1:max(as.numeric(res.all$Rank)))
+  res.all <- res.all[order(res.all$Rank),]
   return(res.all)
 }
