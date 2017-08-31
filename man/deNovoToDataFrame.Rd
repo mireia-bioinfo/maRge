@@ -4,20 +4,22 @@
 \alias{deNovoToDataFrame}
 \title{Creates data.frame with de novo HOMER results}
 \usage{
-deNovoToDataFrame(results_homer)
+deNovoToDataFrame(results_homer, include_all = TRUE)
 }
 \arguments{
-\item{results_homer}{Either the path of the output folder that was generated containing HOMER reports or
-the data.frame obtained using XML::readHTMLTable.}
+\item{results_homer}{Character string containing the path of the output folder that was generated 
+with HOMER.}
+
+\item{include_all}{TRUE (default) of FALSE for including also those motifs that have no ensembl_gene_id.}
 }
 \value{
-The number of significant motifs (int).
+Data.frame containing the results and gene annotation for the de novo motifs.
 }
 \description{
 Generates a data.frame containing the significant motifs found by HOMER.
 }
 \examples{
 \dontrun{
-num <- countSignHOMER("results_homer")
+df.tf <- deNovoToDataFrame("results_homer", include_all=FALSE)
 }
 }

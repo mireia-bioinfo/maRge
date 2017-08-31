@@ -18,7 +18,7 @@
 tf <- read.delim("~/tools/maRge/data-raw/knownResults.txt", stringsAsFactors=F)
 tf <- unique(tf$Motif.Name)
 tf_head <- unlist(sapply(strsplit(tf, "/"), function(x) x[[1]]))
-tf_gene <- unlist(sapply(strsplit(tf, "(", fixed=TRUE), function(x) x[[1]]))
+tf_gene <- unlist(sapply(strsplit(tf_head, "(", fixed=TRUE), function(x) x[[1]]))
 
 ## Obtain possible aliases
 queryGeneNames <- tf_gene
