@@ -13,7 +13,9 @@ countSignHOMER <- function(results_homer) {
   if (is(results_homer, "data.frame")) {
     tables <- results_homer
   } else {
-  tables <- XML::readHTMLTable(paste0(results_homer, "homerResults.html"))[[1]]
+    ## Add "/" if not present
+    if (!(grepl("*/$", results_homer))) results_homer=paste0(results_homer, "/")
+    tables <- XML::readHTMLTable(paste0(results_homer, "homerResults.html"))[[1]]
   }
   fin <- grep("*", tables$Rank, fixed=T)[1]-1
   return(fin)

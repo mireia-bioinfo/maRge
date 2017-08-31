@@ -1,0 +1,15 @@
+#' Dictionary of Homer Motifs
+#'
+#' A dataset containing the names of the motifs used by HOMER and their 
+#' corresponding symbols and ensembl_gene_id. Useful when trying to 
+#' intersect HOMER motif data with transcription data.#' 
+#'
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{Motif.Name}{Name of the motif, as outputed by HOMER.}
+#'   \item{Motif.Symbol}{Section of the Motif.Name including the symbol.}
+#'   \item{external_gene_name}{Standarized gene symbol.}
+#'   \item{ensembl_gene_id}{ENSEMBL gene id.}
+#' }
+#' @source \url{HOMER}
+"dictHomerMotifs"

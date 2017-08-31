@@ -5,7 +5,8 @@
 \title{HOMER de novo motif analysis}
 \usage{
 deNovoMotifHOMER(bed, genome = "hg19", path_output, cores = 6,
-  path_homer = "default")
+  path_homer = "default", size = "given", bits = TRUE, other_param = "",
+  run = TRUE)
 }
 \arguments{
 \item{bed}{Bed file containing the regions you want to analyze.}
@@ -17,6 +18,14 @@ deNovoMotifHOMER(bed, genome = "hg19", path_output, cores = 6,
 \item{cores}{Integer indicating the number of cores to use for the analysis.}
 
 \item{path_homer}{Path for homer location in your computer. It automatically looks in the aliases.}
+
+\item{size}{Corresponds to the flag "-size" in fingMotifsGenome.pl. Default is "given".}
+
+\item{bits}{TRUE (default) or FALSE for scaling the logo.}
+
+\item{other_param}{Character string containing all other parameters that should be added to the command line.}
+
+\item{run}{TRUE (default) or FALSE for wether to run the command. If FALSE, will only print the line.}
 }
 \value{
 Folder "path_ouput" with the html resulting from HOMER de novo motif analysis (no R object).

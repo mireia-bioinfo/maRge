@@ -26,7 +26,7 @@ Before doing any analysis, we need to retrieve the transcription factor binding 
 
 In this package, we implemented a function called `getMotifMatrixJASPAR()` to retrieve a list of binding motifs for all trancription factors in Jaspar 2016 database.  
 
-```{r Obtain TF matrix}
+```{r Obtain TF matrix, eval=FALSE}
 library("maRge")
 matrixList <- getMotifMatrixJASPAR(species=9606, matrixtype="PWM")
 ```
